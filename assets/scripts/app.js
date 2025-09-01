@@ -12,13 +12,37 @@ class DOMHelper {
   }
 }
 
-class Tooltip {
-  constructor(closeFn) {
-    this.closeFn = closeFn;
+class Component {
+  element;
+
+  constructor(hostElementId, insertBefore = false) {
+    this.hostElement = hostElementId
+      ? document.getElementById(hostElementId)
+      : document.body;
+
+    this.insertBefore = insertBefore;
   }
 
   hidden() {
-    this.element.remove();
+    if (this.hidden) {
+      this.element.remove();
+    }
+  }
+
+  show() {
+    this.hostElement.insertAdjacentElement(
+      this.insertBefore ? "afterbegin" : "beforeend",
+      this.element,
+    );
+  }
+}
+
+class Tooltip extends Component {
+  constructor(closeFn, textContent) {
+    super();
+    this.textContent = textContent;
+    this.closeFn = closeFn;
+    this.render();
   }
 
   closeTooltip() {
@@ -26,23 +50,23 @@ class Tooltip {
     this.closeFn();
   }
 
-  show() {
+  render() {
     const tooltipElement = document.createElement("div");
     tooltipElement.className = "card";
-    tooltipElement.textContent = "Tooltip!";
+    tooltipElement.textContent = this.textContent;
     tooltipElement.addEventListener("click", this.closeTooltip.bind(this));
     this.element = tooltipElement;
-    document.body.appendChild(tooltipElement);
   }
 }
 
 class ProjectItem {
   hasActiveTooltip = false;
 
-  constructor(id, updateProjectListsFn, type) {
+  constructor(id, updateProjectListsFn, type, tooltipTextContent) {
     this.id = id;
     this.type = type;
     this.updateProjectListsHandler = updateProjectListsFn;
+    this.tooltipTextContent = tooltipTextContent;
     this.connectSwitchBtn(this.type);
     this.connectMoreInfoBtn();
   }
@@ -61,7 +85,7 @@ class ProjectItem {
   connectMoreInfoBtn() {
     const itemElement = document.querySelector(`#${this.id}`);
     const moreInfoBtn = itemElement.querySelector(".alt");
-    moreInfoBtn.addEventListener("click", this.showMoreInfoHandler);
+    moreInfoBtn.addEventListener("click", this.showMoreInfoHandler.bind(this));
   }
 
   showMoreInfoHandler() {
@@ -70,7 +94,7 @@ class ProjectItem {
     }
     const tooltip = new Tooltip(() => {
       this.hasActiveTooltip = false;
-    });
+    }, this.tooltipTextContent);
     tooltip.show();
     this.hasActiveTooltip = true;
   }
@@ -88,9 +112,15 @@ class ProjectList {
     this.type = type;
 
     const projectItems = document.querySelectorAll(`#${type}-projects li`);
-    for (const { id } of projectItems) {
+    for (const projectItem of projectItems) {
+      const tooltipTextContent = projectItem.querySelector("p").textContent;
       this.projects.push(
-        new ProjectItem(id, this.removeProject.bind(this), this.type),
+        new ProjectItem(
+          projectItem.id,
+          this.removeProject.bind(this),
+          this.type,
+          tooltipTextContent,
+        ),
       );
     }
   }
