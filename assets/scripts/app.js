@@ -81,8 +81,16 @@ class ProjectItem {
     this.type = type;
     this.updateProjectListsHandler = updateProjectListsFn;
     this.tooltipTextContent = tooltipTextContent;
+    this.connectDrag();
     this.connectSwitchBtn(this.type);
     this.connectMoreInfoBtn();
+  }
+
+  connectDrag() {
+    document.getElementById(this.id).addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", this.id);
+      e.dataTransfer.effectAllowed = "move";
+    });
   }
 
   connectSwitchBtn(type) {
@@ -141,6 +149,45 @@ class ProjectList {
         ),
       );
     }
+
+    this.connectDroppable();
+  }
+
+  connectDroppable() {
+    const listElement = document.querySelector(`#${this.type}-projects ul`);
+
+    listElement.addEventListener("dragenter", (e) => {
+      if (e.dataTransfer.types[0] === "text/plain") {
+        e.preventDefault();
+        listElement.parentElement.classList.add("droppable");
+      }
+    });
+
+    listElement.addEventListener("dragover", (e) => {
+      if (e.dataTransfer.types[0] === "text/plain") {
+        e.preventDefault();
+      }
+    });
+
+    listElement.addEventListener("dragleave", (e) => {
+      if (
+        e.relatedTarget.closest(`#${this.type}-projects ul`) !== listElement
+      ) {
+        listElement.parentElement.classList.remove("droppable");
+      }
+    });
+
+    listElement.addEventListener("drop", (e) => {
+      const projectId = e.dataTransfer.getData("text/plain");
+      if (!!~this.projects.findIndex(({ id }) => projectId === id)) {
+        return;
+      }
+      document
+        .getElementById(projectId)
+        .querySelector("button:last-of-type")
+        .click();
+      listElement.parentElement.classList.remove("droppable");
+    });
   }
 
   setSwitchHandler(switchHandler) {
