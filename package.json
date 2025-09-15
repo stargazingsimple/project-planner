@@ -4,7 +4,10 @@
   "description": "Practice: OOP",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "build:dev": "webpack-dev-server",
+    "build:prod": "webpack --config webpack.config.prod.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +21,14 @@
   "homepage": "https://github.com/stargazingsimple/project-planner#readme",
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "clean-webpack-plugin": "^4.0.0",
     "eslint": "^9.35.0",
-    "globals": "^16.4.0"
+    "globals": "^16.4.0",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }

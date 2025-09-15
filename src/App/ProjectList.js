@@ -1,5 +1,5 @@
-import { ProjectItem } from "./ProjectItem.js";
-import { DOMHelper } from "../Utility/DOMHelper.js";
+import { ProjectItem } from "./ProjectItem";
+import { DOMHelper } from "../Utility/DOMHelper";
 
 export class ProjectList {
   projects = [];
@@ -49,7 +49,7 @@ export class ProjectList {
 
     listElement.addEventListener("drop", (e) => {
       const projectId = e.dataTransfer.getData("text/plain");
-      if (!!~this.projects.findIndex(({ id }) => projectId === id)) {
+      if (~this.projects.findIndex(({ id }) => projectId === id)) {
         return;
       }
       document
