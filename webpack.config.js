@@ -5,9 +5,9 @@ module.exports = {
   entry: "./src/app.js",
   output: {
     filename: "app.js",
-    path: path.resolve(__dirname, "dist", "scripts"),
+    path: path.resolve(__dirname, "src"),
   },
   devServer: {
-    static: { directory: path.resolve(__dirname, "dist") },
+    static: { directory: path.resolve(__dirname, "src") },
   },
 };
