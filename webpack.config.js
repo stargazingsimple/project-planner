@@ -2,12 +2,12 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  entry: "./src/assets/scripts/app.js",
+  entry: "./src/app.js",
   output: {
     filename: "app.js",
-    path: path.resolve(__dirname, "src", "assets", "scripts"),
+    path: path.resolve(__dirname, "dist", "assets", "scripts"),
   },
   devServer: {
-    static: { directory: path.resolve(__dirname, "src") },
+    static: { directory: path.resolve(__dirname, "dist") },
   },
 };
