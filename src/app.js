@@ -14,5 +14,3 @@ class App {
 }
 
 App.init();
-
-console.log("Hello");
