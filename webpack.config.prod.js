@@ -5,7 +5,7 @@ module.exports = {
   mode: "production",
   entry: "./src/app.js",
   output: {
-    filename: "[contenthash].js",
+    filename: "app.js",
     path: path.resolve(__dirname, "dist", "assets", "scripts"),
   },
   plugins: [new CleanPlugin.CleanWebpackPlugin()],
